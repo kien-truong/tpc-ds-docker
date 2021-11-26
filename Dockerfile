@@ -11,9 +11,9 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 COPY files/tpc-ds-tool.zip /app/
 
 RUN mkdir tpc-ds && \
-    bsdtar xvf tpc-ds-tool.zip --strip-components=1 -C tpc-ds
-
-RUN cd tpc-ds/tools && make
+    bsdtar xvf tpc-ds-tool.zip --strip-components=1 -C tpc-ds && \
+    cd tpc-ds/tools && \
+    make OS=LINUX
 
 # Download Tini for PID 1
 ARG TINI_VERSION=v0.19.0
@@ -41,7 +41,7 @@ ENTRYPOINT ["/app/tini", "--"]
 CMD ["/app/docker-entrypoint.sh"]
 
 RUN groupadd -g 10000 tpc-ds && \
-    useradd -u 10000 -g 10000 -d /app -r -s /sbin/nologin -c "TPD DS Service User" tpc-ds && \
+    useradd -u 10000 -g 10000 -d /app -r -s /sbin/nologin -c "TPC-DS Service User" tpc-ds && \
     chown tpc-ds /app
 
 COPY --from=builder /app/tini /app/

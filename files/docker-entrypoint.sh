@@ -14,8 +14,10 @@ fi
 
 TPC_DS_FILE_NAME_RE='^([a-zA-Z_]+)_?([0-9_]*)\.dat$'
 
-if [[ "$GOOGLE_APPLICATION_CREDENTIALS" ]] && [[ "$GCS_STORAGE_PREFIX" ]]; then
-    "$GCLOUD_SDK_HOME/bin/gcloud" auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS
+if [[ "$GCS_STORAGE_PREFIX" ]]; then
+    if  [[ "$GOOGLE_APPLICATION_CREDENTIALS" ]]; then
+        "$GCLOUD_SDK_HOME/bin/gcloud" auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS
+    fi
     for f in $(ls "$OUTPUT_DIR"); do
         [[ $f =~ $TPC_DS_FILE_NAME_RE ]] && TABLE_NAME="${BASH_REMATCH[1]}"
         COMPRESSED_FILE="$f.gz"
